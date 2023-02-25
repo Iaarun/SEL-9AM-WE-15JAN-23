@@ -51,9 +51,9 @@ public class _003Operators {
 	public static void ternaryOperators() {
 		// (condition)? expression1:expression2
 		int a=10;
-		int b = 13;
+		int b=13;
 		
-	int res=	(a>b)?(a+b):(a-b);
+	int res=(a>b)?(a+b):(a-b);
 	System.out.println(res);
 	}
 	
