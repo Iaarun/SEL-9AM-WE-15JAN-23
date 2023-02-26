@@ -12,10 +12,20 @@ op: 65
 
 
 WAP to print the sum of firt 50 numbers
-WAP to print the factorial of any number
+WAP to print the factorial of any number</br>
 5!
 0! =1
 
 
 
-wap to print ony even numbers from 1 to 50
+wap to print ony even numbers from 1 to 50</br>
+
+WAP to find largest element of an array</br>
+
+WAP to calculate sum of all the elements of array </br>
+
+WAP to print even element</br>
+WAP to print data stored at even indeces </br>
+
+WAP to reverse the array </br>
+WAP to find second largest element of an array </br>
