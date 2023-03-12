@@ -28,7 +28,7 @@ public class _007Arraysdemo {
 		//declaration of array
 		int  arr[] ;
 		//initialization of array
-		arr= new int [5];
+		arr= new int [1000];
 		
 		System.out.println(arr);
 		System.out.println(Arrays.toString(arr));

@@ -5,7 +5,9 @@ public class Circle extends Shape implements Interface1{
 	
 	public static void main(String[] args) {
 		
-		
+		Circle c = new Circle();
+		//variable defined in interface are default final and static
+	//	c.age=100;
 		
 	}
 
@@ -20,5 +22,6 @@ public class Circle extends Shape implements Interface1{
 
 
 	}
-
+	
+	
 }
