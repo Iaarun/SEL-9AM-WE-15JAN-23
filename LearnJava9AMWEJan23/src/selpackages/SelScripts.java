@@ -1,12 +1,18 @@
 package selpackages;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Key;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
@@ -14,6 +20,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.io.FileHandler;
 
 public class SelScripts {
 
@@ -22,23 +29,135 @@ public class SelScripts {
 	ChromeDriver cdriver;
 	FirefoxDriver fdriver;
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		SelScripts ss = new SelScripts();
 		ss.launchBrowser("firefox");
 		// ss.launchBrowser1("firefox");
-		ss.handleSlider();
+		ss.multiplewindows();
+	}
+	
+	public void multiplewindows() throws InterruptedException {
+		driver.get("https://www.naukri.com/");
+		String tab1= driver.getWindowHandle();
+		System.out.println(driver.getCurrentUrl());
+		driver.findElement(By.xpath("//div[normalize-space()='Services']")).click();
+		Set<String> alltabs=  driver.getWindowHandles();
+		
+		for(String id:alltabs) {
+			if(!id.equals(tab1)) {
+				driver.switchTo().window(id);
+				System.out.println(driver.getCurrentUrl());
+				Thread.sleep(2000);
+				driver.close();
+			}
+		}
+		
+		driver.switchTo().window(tab1);
+		System.out.println(driver.getCurrentUrl());
+		
+		
+	}
+
+	public void openclosenewtabs() {
+		driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=common/home");
+		String tab1 = driver.getWindowHandle();
+		driver.switchTo().newWindow(WindowType.TAB);
+		String tab2 = driver.getWindowHandle();
+		driver.get("https://jqueryui.com/tooltip/");
+
+		driver.switchTo().window(tab1);
+	}
+
+	public void handleTooltip() {
+		driver.get("https://jqueryui.com/tooltip/");
+		driver.switchTo().frame(0);
+		WebElement age = driver.findElement(By.id("age"));
+
+		String tooltip = age.getAttribute("title");
+		System.out.println(tooltip);
+	}
+
+	public void handleAutoSuggestion() {
+		driver.get("https://www.google.com/");
+		driver.findElement(By.name("q")).sendKeys("user in");
+		List<WebElement> alloption = driver.findElements(By.xpath("//div[@id='Alh6id']//li"));
+		for (WebElement x : alloption) {
+			// System.out.println(x.getText());
+			if (x.getText().trim().equalsIgnoreCase("user interface")) {
+				x.click();
+			}
+		}
+	}
+
+	public void handlemodaldialog() {
+		driver.get("https://www.facebook.com/");
+		// driver.findElement(By.xpath("//a[starts-with(@id,'u_0_0_')]"));
+		WebElement createbtn = driver.findElement(By.xpath("//a[starts-with(@id,'u_0_0_')]"));
+		createbtn.click();
+
+		WebElement name = driver.findElement(By.name("firstname"));
+		name.sendKeys("Test User");
+	}
+
+	public void fileupload() {
+		driver.get("https://bonigarcia.dev/selenium-webdriver-java/web-form.html");
+
+		WebElement myfile = driver.findElement(By.name("my-file"));
+		String path = System.getProperty("user.dir");
+		System.out.println(path);
+		myfile.sendKeys(path + "\\src\\slider.png");
+		System.out.println("File upload done");
+	}
+
+	public void capturescreenshot() throws IOException {
+		driver.get("https://jqueryui.com/slider/");
+		driver.switchTo().frame(0);
+
+		WebElement slider = driver.findElement(By.xpath("//div[@id='slider']/span"));
+		Actions action = new Actions(driver);
+		action.clickAndHold(slider).moveByOffset(500, 0).release().build().perform();
+
+		File file = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+		FileHandler.copy(file, new File("./src/slider" + System.currentTimeMillis() + ".png"));
+		System.out.println("Screenshot captured");
+
+		// capture sscreenshot for specific element
+
+		// driver.switchTo().frame(0);
+		WebElement slide = driver.findElement(By.xpath("//div[@id='slider']"));
+
+		file = slide.getScreenshotAs(OutputType.FILE);
+		FileHandler.copy(file, new File("./src/frames" + System.currentTimeMillis() + ".png"));
+		System.out.println(" Frames Screenshot captured");
+
+	}
+
+	public void scroll() {
+		// use javascript executor to scroll on a page
+		driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=common/home");
+
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		// random scroll
+		// js.executeScript("window.scrollBy(0,2000)" );
+
+		// scroll to bring a specific element into view
+		WebElement blog = driver.findElement(By.xpath("//h3[normalize-space()='From The Blog']"));
+		// js.executeScript("arguments[0].scrollIntoView();", blog);
+
+		// scroll till the page height
+		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 	}
 
 	public void handleSlider() {
 		driver.get("https://jqueryui.com/slider/");
 		driver.switchTo().frame(0);
 
-		WebElement slider = driver.findElement(
-				By.xpath("//div[@id='slider']/span"));
-	 Actions action = new Actions(driver);
-	 
-	 action.clickAndHold(slider).moveByOffset(500, 0).release().build().perform();
-	 
+		WebElement slider = driver.findElement(By.xpath("//div[@id='slider']/span"));
+		Actions action = new Actions(driver);
+
+		action.clickAndHold(slider).moveByOffset(500, 0).release().build().perform();
+
 	}
 
 	public void draganddrop() {
@@ -203,6 +322,7 @@ public class SelScripts {
 		}
 
 		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 //		driver.manage().window().minimize();
 
 	}
