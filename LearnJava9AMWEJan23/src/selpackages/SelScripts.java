@@ -21,6 +21,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.io.FileHandler;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SelScripts {
 
@@ -31,31 +33,111 @@ public class SelScripts {
 
 	public static void main(String[] args) throws InterruptedException, IOException {
 		SelScripts ss = new SelScripts();
-		ss.launchBrowser("firefox");
+		ss.launchBrowser("chrome");
 		// ss.launchBrowser1("firefox");
-		ss.multiplewindows();
+		ss.explicitwaits();
 	}
 	
+	
+	public void explicitwaits() {
+		driver.get("https://bonigarcia.dev/selenium-webdriver-java/loading-images.html");
+		
+	   WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+	   
+	   wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//img[@id='landscape']")));
+	   WebElement done = driver.findElement(By.xpath("//p[contains(text(),'Done')]"));
+		System.out.println(done.getText());
+	   
+	   
+	}
+
+	public void seleniumWaits() {
+		driver.get("https://bonigarcia.dev/selenium-webdriver-java/loading-images.html");
+
+		WebElement done = driver.findElement(By.xpath("//p[contains(text(),'Done')]"));
+		System.out.println(done.isDisplayed());
+	}
+
+	public void handlingcalender() {
+		driver.get("https://jqueryui.com/datepicker/");
+		driver.switchTo().frame(0);
+		driver.findElement(By.xpath("//input[@id='datepicker']")).click();
+		String caltitle = driver.findElement(By.xpath("//div[@class='ui-datepicker-title']")).getText();
+		System.out.println(caltitle);
+
+		String month = caltitle.split(" ")[0].trim();
+		String year = caltitle.split(" ")[1].trim();
+		System.out.println(month + "\n" + year);
+
+		String nyear = String.valueOf(Integer.parseInt(year) + 1);
+
+		while (!(month.equals("April") && (year.equals(nyear)))) {
+			driver.findElement(By.xpath("//span[@class='ui-icon ui-icon-circle-triangle-e']")).click();
+			caltitle = driver.findElement(By.xpath("//div[@class='ui-datepicker-title']")).getText();
+			month = caltitle.split(" ")[0].trim();
+			year = caltitle.split(" ")[1].trim();
+		}
+
+		driver.findElement(By.xpath("//a[normalize-space()='15']")).click();
+
+	}
+
+	public void handleHtmltable() {
+		driver.get(
+				"https://www.moneycontrol.com/markets/indian-indices/top-nsemidcap-100-companies-list/27?classic=true&categoryId=1&exType=N");
+		List<WebElement> columns = driver.findElements(By.xpath("//table[@id='indicesTable']/thead/tr/th"));
+		int colNum = columns.size();
+
+		List<WebElement> rows = driver.findElements(By.xpath("//table[@id='indicesTable']/tbody/tr"));
+		int rownum = rows.size();
+
+		// read first column data
+
+		for (int i = 1; i <= rownum; i++) {
+			WebElement data = driver.findElement(By.xpath("//table[@id='indicesTable']/tbody/tr[" + i + "]/td[1]"));
+			System.out.println(data.getText());
+		}
+		System.out.println("==========================");
+		// reading row data
+		for (int i = 1; i <= colNum; i++) {
+			WebElement data = driver.findElement(By.xpath("//table[@id='indicesTable']/tbody/tr[3]/td[" + i + "]"));
+			System.out.print(data.getText() + " ");
+		}
+
+		System.out.println("==========================");
+
+		// complete table data
+
+		for (int i = 1; i <= rownum; i++) {
+			for (int j = 1; j <= colNum; j++) {
+				WebElement data = driver
+						.findElement(By.xpath("//table[@id='indicesTable']/tbody/tr[" + i + "]/td[" + j + "]"));
+				System.out.print(data.getText() + " | ");
+			}
+
+			System.out.println();
+		}
+	}
+
 	public void multiplewindows() throws InterruptedException {
 		driver.get("https://www.naukri.com/");
-		String tab1= driver.getWindowHandle();
+		String tab1 = driver.getWindowHandle();
 		System.out.println(driver.getCurrentUrl());
 		driver.findElement(By.xpath("//div[normalize-space()='Services']")).click();
-		Set<String> alltabs=  driver.getWindowHandles();
-		
-		for(String id:alltabs) {
-			if(!id.equals(tab1)) {
+		Set<String> alltabs = driver.getWindowHandles();
+
+		for (String id : alltabs) {
+			if (!id.equals(tab1)) {
 				driver.switchTo().window(id);
 				System.out.println(driver.getCurrentUrl());
 				Thread.sleep(2000);
 				driver.close();
 			}
 		}
-		
+
 		driver.switchTo().window(tab1);
 		System.out.println(driver.getCurrentUrl());
-		
-		
+
 	}
 
 	public void openclosenewtabs() {
@@ -322,7 +404,7 @@ public class SelScripts {
 		}
 
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 //		driver.manage().window().minimize();
 
 	}
