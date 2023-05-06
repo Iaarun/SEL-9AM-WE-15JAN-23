@@ -30,9 +30,10 @@ public class NewTest2 {
 	  System.out.println("Test Method3");
   }
   
-  @Test
-  public void test4() {
+  @Test (timeOut = 2000)
+  public void test4() throws InterruptedException {
 	  System.out.println("Test Method4");
+	  Thread.sleep(5000);
   }
   @Test (invocationCount = 1)
   public void test5() {

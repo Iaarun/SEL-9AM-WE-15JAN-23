@@ -15,7 +15,7 @@ public class SampleTestNg {
 	public void launchBrowser() {
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
-	}
+	} 
 	
 	@AfterMethod
 	public void closeBrowser() {

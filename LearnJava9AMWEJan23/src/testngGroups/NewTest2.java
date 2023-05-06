@@ -21,9 +21,9 @@ public class NewTest2 {
 	  System.out.println("Test Method7");
   }
   
-  @Test(groups = "language")
+  @Test(groups = {"language","regression"})
   public void test2() {
-	  System.out.println("Test Method2");
+	  System.out.println("New Test2 Test Method2");
   }
   @Test(groups = "sanity")
   public void test3() {

@@ -44,9 +44,5 @@ public class NewTest1 {
 	  System.out.println("Test Method6");
 	  
   }
-  
-  
-  
-
 
 }
